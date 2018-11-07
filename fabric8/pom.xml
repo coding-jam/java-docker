@@ -12,17 +12,20 @@
     </prerequisites>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <vertx.version>3.5.4</vertx.version>
+        <vertx-maven-plugin.version>1.0.13</vertx-maven-plugin.version>
+        <vertx.verticle>it.codingjam.web.Server</vertx.verticle>
     </properties>
     <dependencies>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
-            <version>3.5.4</version>
+            <version>${vertx.version}</version>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web</artifactId>
-            <version>3.5.4</version>
+            <version>${vertx.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -38,7 +41,7 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-unit</artifactId>
-            <version>3.5.4</version>
+            <version>${vertx.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -73,6 +76,48 @@
                 <version>2.7</version>
                 <configuration>
                     <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>vertx-maven-plugin</artifactId>
+                <version>${vertx-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>vmp</id>
+                        <goals>
+                            <goal>initialize</goal>
+                            <goal>package</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <redeploy>true</redeploy>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.27.2</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <alias>fabric8</alias>
+                            <name>codingjam/${project.name}:${project.version}</name>
+                            <build>
+                                <from>openjdk:8-jre-alpine</from>
+                                <tags>
+                                    <tag>latest</tag>
+                                </tags>
+                                <assembly>
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
+                                <cmd>
+                                    <shell>java -jar maven/${project.name}-${project.version}.jar</shell>
+                                </cmd>
+                            </build>
+                        </image>
+                    </images>
                 </configuration>
             </plugin>
         </plugins>
