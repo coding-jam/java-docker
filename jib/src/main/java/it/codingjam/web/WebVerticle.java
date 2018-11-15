@@ -15,7 +15,9 @@ public class WebVerticle extends AbstractVerticle {
     @Override
     public void start(Future<Void> startFuture) throws Exception {
         final Router router = Router.router(getVertx());
-        router.route(HttpMethod.GET, "/").handler(StaticHandler.create("static"));
+        final StaticHandler staticHandler = StaticHandler.create("static");
+        router.route(HttpMethod.GET, "/").handler(staticHandler);
+        router.route(HttpMethod.GET, "/hello").handler(staticHandler);
 
         logger.info("Try to start WebServer on port: {}", HTTP_PORT);
         getVertx().createHttpServer()
