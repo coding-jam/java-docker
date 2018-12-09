@@ -103,7 +103,7 @@
                     <images>
                         <image>
                             <alias>fabric8</alias>
-                            <name>localhost:5000/codingjam/${project.name}:${project.version}</name>
+                            <name>84.84.87.88:5000/codingjam/${project.name}:${project.version}</name>
                             <build>
                                 <from>gcr.io/distroless/java</from>
                                 <tags>
